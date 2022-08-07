@@ -5,6 +5,8 @@
  * 2S = Two of Spades (Picas)
 */
 
+console.clear();
+
 let deck = [];
 
 const figuras = ['A', 'J', 'Q', 'K'];
@@ -16,10 +18,13 @@ const btnPedir=document.querySelector('#btnPedir');
 
 const btnDetener=document.querySelector('#btnDetener');
 
+const btnNuevo=document.querySelector('#btnNuevo');
+
 const divJugadorCartas=document.querySelector('#jugador-cartas');
 
 const divComputadoraCartas=document.querySelector('#computadora-cartas');
 
+const divMarcador=document.querySelector('#marcador');
 
 
 const puntosHTML=document.querySelectorAll('small');
@@ -27,6 +32,8 @@ const puntosHTML=document.querySelectorAll('small');
 
 
 const crearDecK = () => {
+
+    deck=[];
 
     for (let i = 2; i <= 10; i++) {
         for (let carta of cartas) {
@@ -134,9 +141,40 @@ const turnoComputadora = (puntosMinimos) => {
     } while ((puntosComputadora<puntosMinimos) && (puntosMinimos<=21));
 
     btnDetener.disabled=true;
+
+    // setTimeout(()=> {
+    //     if((puntosMinimos<=21) && (puntosMinimos>puntosComputadora)) {
+    //         alert('Gana Jugador ' + puntosMinimos + '-' + puntosComputadora);
+    //     } else {
+    //         alert('Gana Computadora ' + puntosComputadora + '-' + puntosMinimos);
+    //     }
+    // }, 1000);
+
+    pintarResultado();
+
 }
 
 
+const pintarResultado = () => {
+
+    let texto='';
+
+    if((puntosJugador<=21) && (puntosJugador>puntosComputadora)) {
+        texto='Gana Jugador: ';
+    } else if (puntosComputadora<=21) {
+        texto='Gana Computadora: ';
+    } else {
+        texto='Gana Jugador: ';
+    }
+    
+    texto+= puntosJugador + '-' + puntosComputadora;
+
+
+    const marcador = document.createElement('h1');
+    marcador.innerText=texto;
+    divMarcador.append(marcador);
+
+}
 
 
 
@@ -162,16 +200,16 @@ btnPedir.addEventListener('click', () => {
 
     puntosHTML[0].innerText=puntosJugador;
 
-    if(puntosJugador>21) {
-        console.warn('Lo siento, perdiste!!!');
+    if(puntosJugador>=21) {
+        // console.warn('Lo siento, perdiste!!!');
         btnPedir.disabled=true;
         btnDetener.disabled=true;
         turnoComputadora(puntosJugador);
-    } else if(puntosJugador===21) {
-        console.log('Ganaste!!!');
-        btnPedir.disabled=true;
-        btnDetener.disabled=true;
-        turnoComputadora(puntosJugador);
+    // } else if(puntosJugador===21) {
+    //     // console.log('Ganaste!!!');
+    //     btnPedir.disabled=true;
+    //     btnDetener.disabled=true;
+    //     turnoComputadora(puntosJugador);
     }        
 
     
@@ -188,3 +226,25 @@ btnDetener.addEventListener('click',()=>{
 });
 
 
+btnNuevo.addEventListener('click', () => {
+
+    console.clear();
+
+    deck=crearDecK();
+
+    puntosJugador=0;
+    puntosComputadora=0;
+
+    puntosHTML[0].innerText=0;
+    puntosHTML[1].innerText=0;
+
+    btnPedir.disabled=false;
+    btnDetener.disabled=false;
+
+    divComputadoraCartas.innerHTML='';
+    divJugadorCartas.innerHTML='';
+    divMarcador.innerHTML='';
+
+    
+
+});
